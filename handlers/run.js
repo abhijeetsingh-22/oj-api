@@ -13,7 +13,15 @@ const runPOST = async (req, res) => {
     callback: req.body.callback,
   });
   console.log('run request');
-  await queueJob(job);
+  const runJob = {
+    id: job.id,
+    source: req.body.source,
+    lang: req.body.lang,
+    stdin: req.body.stdin || '',
+    timelimit: req.body.timelimit,
+    scenario: 'run',
+  };
+  await queueJob(runJob);
   if (['callback', 'poll'].includes(mode)) return res.json({id: job.id});
   // if mode === 'sync'
   RunPool[job.id] = {
